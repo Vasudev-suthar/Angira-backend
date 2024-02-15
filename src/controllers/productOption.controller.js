@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js"
 import { Productoption } from "../models/productOption.model.js"
 import { uploadOnCloudinary, deleteOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
-import mongoose, { isValidObjectId } from "mongoose"
+import { isValidObjectId } from "mongoose"
 
 
 const addProductOption = asyncHandler(async (req, res) => {
@@ -29,7 +29,7 @@ const addProductOption = asyncHandler(async (req, res) => {
     const finishesImages = [];
 
     // Upload and process images for Tops
-    await Promise.all(Tops.map(async(top, index) => {
+    await Promise.all(Tops.map(async (top, index) => {
         const topImages = req.files[`Tops[${index}][topsimg]`];
         const topNames = top.topname.split(',');
 
@@ -57,7 +57,7 @@ const addProductOption = asyncHandler(async (req, res) => {
     }))
 
 
-    await Promise.all(Edges.map(async(edge, index) => {
+    await Promise.all(Edges.map(async (edge, index) => {
         const edgeImages = req.files[`Edges[${index}][edgesimg]`];
         const edgeNames = edge.edgename.split(',');
 
@@ -67,7 +67,7 @@ const addProductOption = asyncHandler(async (req, res) => {
 
         await Promise.all(edgeImages.map(async (file, fileIndex) => {
             const edgesimgLocalPath = file.path;
-            const edgeImg = await uploadOnCloudinary( edgesimgLocalPath);
+            const edgeImg = await uploadOnCloudinary(edgesimgLocalPath);
             if (!edgeImg) {
                 throw new ApiError(400, "Failed to upload Edges image");
             }
@@ -85,7 +85,7 @@ const addProductOption = asyncHandler(async (req, res) => {
     }))
 
 
-    await Promise.all(Finish.map(async(finish, index) => {
+    await Promise.all(Finish.map(async (finish, index) => {
         const finishImages = req.files[`Finish[${index}][finishimg]`];
         const finishNames = finish.finishname.split(',');
 
@@ -123,7 +123,6 @@ const addProductOption = asyncHandler(async (req, res) => {
 
     return res.status(201).json(new ApiResponse(200, productOption, "Product added Successfully"));
 });
-
 
 const getProductOption = asyncHandler(async (req, res) => {
     const productOption = await Productoption.find()

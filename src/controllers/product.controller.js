@@ -1,23 +1,20 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { Product } from "../models/product.model.js"
-import { Productoption } from "../models/productOption.model.js"
 import { uploadOnCloudinary, deleteOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
-import mongoose, { isValidObjectId } from "mongoose"
+import { isValidObjectId } from "mongoose"
 
 
 const addProduct = asyncHandler(async (req, res) => {
 
     const { CategoryName, ProductName } = req.body
-    // console.log("email: ", email)
 
     if (
         [CategoryName, ProductName].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All field are required")
     }
-
 
     const productImgLocalPath = req.files?.img[0]?.path;
 
@@ -138,11 +135,9 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
     const product = await Product.findById(productId);
 
-
     if (!product) {
         throw new ApiError(404, "No product found");
     }
-
 
     const deleteProduct = await Product.findByIdAndDelete(productId);
 
@@ -157,12 +152,12 @@ const deleteProduct = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, deleteProduct, "Product deleted successfully"));
 })
 
-const searchProduct = asyncHandler(async(req, res) => {
+const searchProduct = asyncHandler(async (req, res) => {
 
     const products = await Product.find({
-        "$or" : [
-            {CategoryName: {$regex: (req.params.key, 'i')}},
-            {ProductName: {$regex: (req.params.key, 'i')}}
+        "$or": [
+            { CategoryName: { $regex: (req.params.key, 'i') } },
+            { ProductName: { $regex: (req.params.key, 'i') } }
         ]
     })
 
@@ -183,14 +178,23 @@ const searchProduct = asyncHandler(async(req, res) => {
     }
 })
 
-
 const aggregateProductsWithOptions = asyncHandler(async (req, res) => {
-    const { productName } = req.params;
+    const { productId } = req.params;
 
-    if (!productName?.trim()) {
-        throw new ApiError(400, "Product name is missing");
+    if (!productId) {
+        throw new ApiError(400, "Product ID is missing");
     }
 
+    // Fetch the product document using the _id
+    const product = await Product.findById(productId);
+
+    if (!product) {
+        throw new ApiError(404, "Product not found");
+    }
+
+    const productName = product.ProductName;
+
+    // Aggregate based on ProductName
     const productsWithOptions = await Product.aggregate([
         {
             $match: {

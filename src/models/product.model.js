@@ -1,21 +1,21 @@
 import { Schema } from "mongoose";
 import mongoose from "mongoose";
 
-const productSchema = new Schema ({
+const productSchema = new Schema({
     CategoryName: {
-        type : String,
-        required : true
+        type: String,
+        required: true
     },
     ProductName: {
-        type : String,
-        required : true
+        type: String,
+        required: true
     },
-    img:{
+    img: {
         type: {
             url: String,
             public_id: String,
         },  // cloudinary url
-        required:true
+        required: true
     }
 })
 

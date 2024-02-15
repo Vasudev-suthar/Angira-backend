@@ -14,25 +14,25 @@ const fieldsConfig = [
     { name: 'Tops[6][topsimg]', maxCount: 1 },
     { name: 'Tops[7][topsimg]', maxCount: 1 },
 
-    {name: "Edges[0][edgesimg]",maxCount: 1},
-    {name: "Edges[1][edgesimg]",maxCount: 1},
-    {name: "Edges[2][edgesimg]",maxCount: 1},
-    {name: "Edges[3][edgesimg]",maxCount: 1},
-    {name: "Edges[4][edgesimg]",maxCount: 1},
-    {name: "Edges[5][edgesimg]",maxCount: 1},
+    { name: "Edges[0][edgesimg]", maxCount: 1 },
+    { name: "Edges[1][edgesimg]", maxCount: 1 },
+    { name: "Edges[2][edgesimg]", maxCount: 1 },
+    { name: "Edges[3][edgesimg]", maxCount: 1 },
+    { name: "Edges[4][edgesimg]", maxCount: 1 },
+    { name: "Edges[5][edgesimg]", maxCount: 1 },
 
-    {name: "Finish[0][finishimg]",maxCount: 1},
-    {name: "Finish[1][finishimg]",maxCount: 1},
-    {name: "Finish[2][finishimg]",maxCount: 1},
-    {name: "Finish[3][finishimg]",maxCount: 1},
-    {name: "Finish[4][finishimg]",maxCount: 1},
-    
+    { name: "Finish[0][finishimg]", maxCount: 1 },
+    { name: "Finish[1][finishimg]", maxCount: 1 },
+    { name: "Finish[2][finishimg]", maxCount: 1 },
+    { name: "Finish[3][finishimg]", maxCount: 1 },
+    { name: "Finish[4][finishimg]", maxCount: 1 },
+
 ];
 
-router.route("/addproductoption").post(upload.fields(fieldsConfig),addProductOption)
+router.route("/addproductoption").post(upload.fields(fieldsConfig), addProductOption)
 
 router.route("/getproductoption").get(getProductOption)
-router.route("/updateproductoption/:productOptionId").put( upload.fields(fieldsConfig),updateProductOptionDetails)
+router.route("/updateproductoption/:productOptionId").put(upload.fields(fieldsConfig), updateProductOptionDetails)
 router.route("/deleteproductoption/:productOptionId").delete(deleteProductOption)
 
 

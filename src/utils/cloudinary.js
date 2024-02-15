@@ -16,9 +16,7 @@ const uploadOnCloudinary = async (localFilePath) => {
             (localFilePath, {
                 resource_type: "auto"
             })
-        //for check file has been uploaded on cloudinary
-        // console.log("file is uploaded on cloudinary ",
-        //     response.url)
+
         fs.unlinkSync(localFilePath)
         return response
     } catch (error) {
@@ -27,7 +25,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 
-const deleteOnCloudinary = async (public_id, resource_type="image") => {
+const deleteOnCloudinary = async (public_id, resource_type = "image") => {
     try {
         if (!public_id) return null;
 
