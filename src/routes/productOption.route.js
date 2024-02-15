@@ -4,18 +4,35 @@ import { upload } from "../middlewares/multer.middleware.js"
 
 const router = Router()
 
-router.route("/addproductoption").post(
-    upload.fields([
-        {
-            name: "optionimg",
-            maxCount: 1
-        }
-    ]),
-    addProductOption
-    )
+const fieldsConfig = [
+    { name: 'Tops[0][topsimg]', maxCount: 1 },
+    { name: 'Tops[1][topsimg]', maxCount: 1 },
+    { name: 'Tops[2][topsimg]', maxCount: 1 },
+    { name: 'Tops[3][topsimg]', maxCount: 1 },
+    { name: 'Tops[4][topsimg]', maxCount: 1 },
+    { name: 'Tops[5][topsimg]', maxCount: 1 },
+    { name: 'Tops[6][topsimg]', maxCount: 1 },
+    { name: 'Tops[7][topsimg]', maxCount: 1 },
+
+    {name: "Edges[0][edgesimg]",maxCount: 1},
+    {name: "Edges[1][edgesimg]",maxCount: 1},
+    {name: "Edges[2][edgesimg]",maxCount: 1},
+    {name: "Edges[3][edgesimg]",maxCount: 1},
+    {name: "Edges[4][edgesimg]",maxCount: 1},
+    {name: "Edges[5][edgesimg]",maxCount: 1},
+
+    {name: "Finish[0][finishimg]",maxCount: 1},
+    {name: "Finish[1][finishimg]",maxCount: 1},
+    {name: "Finish[2][finishimg]",maxCount: 1},
+    {name: "Finish[3][finishimg]",maxCount: 1},
+    {name: "Finish[4][finishimg]",maxCount: 1},
+    
+];
+
+router.route("/addproductoption").post(upload.fields(fieldsConfig),addProductOption)
 
 router.route("/getproductoption").get(getProductOption)
-router.route("/updateproductoption/:productOptionId").put(upload.single("optionimg"),updateProductOptionDetails)
+router.route("/updateproductoption/:productOptionId").put( upload.fields(fieldsConfig),updateProductOptionDetails)
 router.route("/deleteproductoption/:productOptionId").delete(deleteProductOption)
 
 

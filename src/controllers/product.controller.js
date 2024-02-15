@@ -1,6 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { Product } from "../models/product.model.js"
+import { Productoption } from "../models/productOption.model.js"
 import { uploadOnCloudinary, deleteOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import mongoose, { isValidObjectId } from "mongoose"
@@ -182,10 +183,43 @@ const searchProduct = asyncHandler(async(req, res) => {
     }
 })
 
+
+const aggregateProductsWithOptions = asyncHandler(async (req, res) => {
+    const { productName } = req.params;
+
+    if (!productName?.trim()) {
+        throw new ApiError(400, "Product name is missing");
+    }
+
+    const productsWithOptions = await Product.aggregate([
+        {
+            $match: {
+                ProductName: productName
+            }
+        },
+        {
+            $lookup: {
+                from: 'productoptions',
+                localField: 'ProductName',
+                foreignField: 'ProductName',
+                as: 'options'
+            }
+        }
+    ]);
+
+    if (!productsWithOptions?.length) {
+        throw new ApiError(404, "Product with options does not exist");
+    }
+
+    return res.status(200).json(new ApiResponse(200, productsWithOptions[0], "Product with options fetched successfully"));
+});
+
+
 export {
     addProduct,
     getProduct,
     updateProductDetails,
     deleteProduct,
-    searchProduct
+    searchProduct,
+    aggregateProductsWithOptions
 }
