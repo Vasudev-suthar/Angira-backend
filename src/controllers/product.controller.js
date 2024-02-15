@@ -73,7 +73,7 @@ const updateProductDetails = asyncHandler(async (req, res) => {
     }
 
     if (!(CategoryName && ProductName)) {
-        throw new ApiError(400, "CategoryName, ProductName and description are required");
+        throw new ApiError(400, "CategoryName and ProductName are required");
     }
 
     const product = await Product.findById(productId);
