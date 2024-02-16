@@ -176,7 +176,7 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
 
     // Process and upload new images for Tops
     for (let i = 0; i < Tops.length; i++) {
-        const topsEntry = Tops[i];
+        const topNames = Tops[i];
         const topImages = req.files?.[`Tops[${i}][topsimg]`];
 
         if (!topImages || !topImages.length) {
@@ -191,7 +191,7 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
             }
 
             return {
-                topname: topsEntry.topname,
+                topname: topNames.topname,
                 topsimg: { url: topImg.url, public_id: topImg.public_id }
             };
         }));
@@ -201,7 +201,7 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
 
 
     for (let i = 0; i < Edges.length; i++) {
-        const edgesEntry = Edges[i];
+        const edgeNames = Edges[i];
         const edgeImages = req.files?.[`Edges[${i}][edgesimg]`];
 
         if (!edgeImages || !edgeImages.length) {
@@ -216,7 +216,7 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
             }
 
             return {
-                edgename: edgesEntry.edgename,
+                edgename: edgeNames.edgename,
                 edgesimg: { url: edgeImg.url, public_id: edgeImg.public_id }
             };
         }));
@@ -226,7 +226,7 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
 
 
     for (let i = 0; i < Finish.length; i++) {
-        const finishEntry = Finish[i];
+        const finishNames = Finish[i];
         const finishImages = req.files?.[`Finish[${i}][finishimg]`];
 
         if (!finishImages || !finishImages.length) {
@@ -241,7 +241,7 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
             }
 
             return {
-                finishname: finishEntry.finishname,
+                finishname: finishNames.finishname,
                 finishimg: { url: finishImg.url, public_id: finishImg.public_id }
             };
         }));

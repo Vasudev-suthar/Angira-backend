@@ -10,10 +10,8 @@ const addProduct = asyncHandler(async (req, res) => {
 
     const { CategoryName, ProductName } = req.body
 
-    if (
-        [CategoryName, ProductName].some((field) => field?.trim() === "")
-    ) {
-        throw new ApiError(400, "All field are required")
+    if (!ProductName || !CategoryName) {
+        throw new ApiError(400, "All fields are required");
     }
 
     const productImgLocalPath = req.files?.img[0]?.path;
