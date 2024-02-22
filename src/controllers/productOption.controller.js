@@ -7,9 +7,28 @@ import { isValidObjectId } from "mongoose"
 
 
 const addProductOption = asyncHandler(async (req, res) => {
-    const { ProductName, Tops, Edges, Finish } = req.body;
+    
 
-    if (!ProductName || !Tops || !Edges || !Finish) {
+    const {productid} = req.params
+
+
+    if (!isValidObjectId(productid)) {
+        throw new ApiError(400, "Invalid productid");
+    }
+
+    const productsetAlready = await Productoption.findOne({
+        Product: productid,
+    });
+
+    if (productsetAlready) {
+        return res
+            .status(200)
+            .json(new ApiResponse(200, "product is set Already"));
+    }
+
+    const { Tops, Edges, Finish } = req.body;
+
+    if (!Tops || !Edges || !Finish) {
         throw new ApiError(400, "All fields are required");
     }
 
@@ -115,7 +134,7 @@ const addProductOption = asyncHandler(async (req, res) => {
 
     // Create product option with the processed data
     const productOption = await Productoption.create({
-        ProductName,
+        Product: productid,
         Tops: topsImages,
         Edges: edgesImages,
         Finish: finishesImages
@@ -146,7 +165,7 @@ const getProductOption = asyncHandler(async (req, res) => {
 
 const updateProductOptionDetails = asyncHandler(async (req, res) => {
     const { productOptionId } = req.params;
-    const { ProductName, Tops, Edges, Finish } = req.body;
+    const { Tops, Edges, Finish } = req.body;
 
     // Validate productOptionId
     if (!isValidObjectId(productOptionId)) {
@@ -154,8 +173,8 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
     }
 
     // Validate presence of required fields
-    if (!ProductName || !Tops || !Edges || !Finish) {
-        throw new ApiError(400, "ProductName and options are required");
+    if (!Tops || !Edges || !Finish) {
+        throw new ApiError(400, "Tops, Edges and Finish are required");
     }
 
     // Find the existing product option by ID
@@ -255,7 +274,6 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
     const updatedProductOption = await Productoption.findByIdAndUpdate(
         productOptionId,
         {
-            ProductName,
             Tops: topsImages,
             Edges: edgesImages,
             Finish: finishesImages

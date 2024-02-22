@@ -29,7 +29,7 @@ const fieldsConfig = [
 
 ];
 
-router.route("/addproductoption").post(upload.fields(fieldsConfig), addProductOption)
+router.route("/addproductoption/:productid").post(upload.fields(fieldsConfig), addProductOption)
 
 router.route("/getproductoption").get(getProductOption)
 router.route("/updateproductoption/:productOptionId").put(upload.fields(fieldsConfig), updateProductOptionDetails)

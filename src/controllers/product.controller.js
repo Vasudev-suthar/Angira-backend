@@ -190,21 +190,30 @@ const aggregateProductsWithOptions = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Product not found");
     }
 
-    const productName = product.ProductName;
+    // const productName = product.ProductName;
+    const productIdValue = product._id;
 
     // Aggregate based on ProductName
     const productsWithOptions = await Product.aggregate([
         {
             $match: {
-                ProductName: productName
+                _id: productIdValue
             }
         },
         {
             $lookup: {
                 from: 'productoptions',
-                localField: 'ProductName',
-                foreignField: 'ProductName',
+                localField: '_id',
+                foreignField: 'Product',
                 as: 'options'
+            }
+        },
+        {
+            $project: {
+                CategoryName: 1,
+                ProductName: 1,
+                img: 1,
+                options: 1
             }
         }
     ]);
