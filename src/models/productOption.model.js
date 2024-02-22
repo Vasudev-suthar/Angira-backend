@@ -6,7 +6,7 @@ const productOptionSchema = new Schema(
         Product: {
             type: Schema.Types.ObjectId,
             ref: "Product",
-            required: true 
+            required: true
         },
         Tops: [
             {
@@ -16,8 +16,7 @@ const productOptionSchema = new Schema(
                 },
                 topsimg: {
                     type: {
-                        url: String,
-                        public_id: String,
+                        url: String
                     },
                     required: true
                 }
@@ -31,8 +30,7 @@ const productOptionSchema = new Schema(
                 },
                 edgesimg: {
                     type: {
-                        url: String,
-                        public_id: String,
+                        url: String
                     },
                     required: true
                 }
@@ -46,8 +44,7 @@ const productOptionSchema = new Schema(
                 },
                 finishimg: {
                     type: {
-                        url: String,
-                        public_id: String,
+                        url: String
                     },
                     required: true
                 }

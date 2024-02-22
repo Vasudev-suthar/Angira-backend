@@ -5,6 +5,7 @@ const productSchema = new Schema(
     {
         CategoryName: {
             type: String,
+            enum: ['Dining Table', 'Stool', 'Coffee Table', 'Metal Leg'],
             required: true
         },
         ProductName: {
@@ -14,8 +15,7 @@ const productSchema = new Schema(
         img: {
             type: {
                 url: String,
-                public_id: String,
-            },  // cloudinary url
+            },
             required: true
         }
     },
