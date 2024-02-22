@@ -1,16 +1,14 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { Productoption } from "../models/productOption.model.js"
-import { uploadOnCloudinary, deleteOnCloudinary } from "../utils/cloudinary.js"
+import { deleteImage } from "../utils/deleteImg.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { isValidObjectId } from "mongoose"
 
 
 const addProductOption = asyncHandler(async (req, res) => {
-    
 
-    const {productid} = req.params
-
+    const { productid } = req.params
 
     if (!isValidObjectId(productid)) {
         throw new ApiError(400, "Invalid productid");
@@ -58,18 +56,12 @@ const addProductOption = asyncHandler(async (req, res) => {
 
         await Promise.all(topImages.map(async (file, fileIndex) => {
             const topsimgLocalPath = file.path;
-            const topImg = await uploadOnCloudinary(topsimgLocalPath);
-            if (!topImg) {
-                throw new ApiError(400, "Failed to upload Tops image");
-            }
-
             const topname = topNames[fileIndex].trim();
 
             topsImages.push({
                 topname: topname,
                 topsimg: {
-                    url: topImg.url,
-                    public_id: topImg.public_id
+                    url: topsimgLocalPath
                 }
             });
         }))
@@ -86,18 +78,12 @@ const addProductOption = asyncHandler(async (req, res) => {
 
         await Promise.all(edgeImages.map(async (file, fileIndex) => {
             const edgesimgLocalPath = file.path;
-            const edgeImg = await uploadOnCloudinary(edgesimgLocalPath);
-            if (!edgeImg) {
-                throw new ApiError(400, "Failed to upload Edges image");
-            }
-
             const edgename = edgeNames[fileIndex].trim();
 
             edgesImages.push({
                 edgename: edgename,
                 edgesimg: {
-                    url: edgeImg.url,
-                    public_id: edgeImg.public_id
+                    url: edgesimgLocalPath
                 }
             });
         }))
@@ -114,18 +100,12 @@ const addProductOption = asyncHandler(async (req, res) => {
 
         await Promise.all(finishImages.map(async (file, fileIndex) => {
             const finishimgLocalPath = file.path;
-            const finishImg = await uploadOnCloudinary(finishimgLocalPath);
-            if (!finishImg) {
-                throw new ApiError(400, "Failed to upload Tops image");
-            }
-
             const finishname = finishNames[fileIndex].trim();
 
             finishesImages.push({
                 finishname: finishname,
                 finishimg: {
-                    url: finishImg.url,
-                    public_id: finishImg.public_id
+                    url: finishimgLocalPath
                 }
             });
         }))
@@ -185,9 +165,9 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
     }
 
     // Delete old images and upload new ones
-    const topsimgtodelete = productOption.Tops.map(top => top.topsimg.public_id);
-    const edgeimgtodelete = productOption.Edges.map(edge => edge.edgesimg.public_id);
-    const finishimgtodelete = productOption.Finish.map(finish => finish.finishimg.public_id);
+    const topsimgtodelete = productOption.Tops.map(top => top.topsimg.url);
+    const edgeimgtodelete = productOption.Edges.map(edge => edge.edgesimg.url);
+    const finishimgtodelete = productOption.Finish.map(finish => finish.finishimg.url);
 
     const topsImages = [];
     const edgesImages = [];
@@ -204,14 +184,9 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
 
         const processedImages = await Promise.all(topImages.map(async file => {
             const topsimgLocalPath = file.path;
-            const topImg = await uploadOnCloudinary(topsimgLocalPath);
-            if (!topImg) {
-                throw new ApiError(400, "Failed to upload Tops image");
-            }
-
             return {
                 topname: topNames.topname,
-                topsimg: { url: topImg.url, public_id: topImg.public_id }
+                topsimg: { url: topsimgLocalPath }
             };
         }));
 
@@ -229,14 +204,9 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
 
         const processedImages = await Promise.all(edgeImages.map(async file => {
             const edgesimgLocalPath = file.path;
-            const edgeImg = await uploadOnCloudinary(edgesimgLocalPath);
-            if (!edgeImg) {
-                throw new ApiError(400, "Failed to upload Edges image");
-            }
-
             return {
                 edgename: edgeNames.edgename,
-                edgesimg: { url: edgeImg.url, public_id: edgeImg.public_id }
+                edgesimg: { url: edgesimgLocalPath }
             };
         }));
 
@@ -254,14 +224,9 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
 
         const processedImages = await Promise.all(finishImages.map(async file => {
             const finishimgLocalPath = file.path;
-            const finishImg = await uploadOnCloudinary(finishimgLocalPath);
-            if (!finishImg) {
-                throw new ApiError(400, "Failed to upload finish image");
-            }
-
             return {
                 finishname: finishNames.finishname,
-                finishimg: { url: finishImg.url, public_id: finishImg.public_id }
+                finishimg: { url: finishimgLocalPath }
             };
         }));
 
@@ -287,9 +252,9 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
 
     // Delete old images from Cloudinary
     await Promise.all([
-        ...topsimgtodelete.map(public_id => deleteOnCloudinary(public_id)),
-        ...edgeimgtodelete.map(public_id => deleteOnCloudinary(public_id)),
-        ...finishimgtodelete.map(public_id => deleteOnCloudinary(public_id))
+        ...topsimgtodelete.map(url => deleteImage(url)),
+        ...edgeimgtodelete.map(url => deleteImage(url)),
+        ...finishimgtodelete.map(url => deleteImage(url))
     ]);
 
     return res.status(200).json(new ApiResponse(200, updatedProductOption, "Product option updated successfully"));
@@ -311,9 +276,9 @@ const deleteProductOption = asyncHandler(async (req, res) => {
     }
 
 
-    const topsimgtodelete = productOption.Tops.map(top => top.topsimg.public_id);
-    const edgeimgtodelete = productOption.Edges.map(edge => edge.edgesimg.public_id);
-    const finishimgtodelete = productOption.Finish.map(finish => finish.finishimg.public_id);
+    const topsimgtodelete = productOption.Tops.map(top => top.topsimg.url);
+    const edgeimgtodelete = productOption.Edges.map(edge => edge.edgesimg.url);
+    const finishimgtodelete = productOption.Finish.map(finish => finish.finishimg.url);
 
     const deleteProduct = await Productoption.findByIdAndDelete(productOptionId);
 
@@ -322,9 +287,9 @@ const deleteProductOption = asyncHandler(async (req, res) => {
     }
 
     await Promise.all([
-        ...topsimgtodelete.map(public_id => deleteOnCloudinary(public_id)),
-        ...edgeimgtodelete.map(public_id => deleteOnCloudinary(public_id)),
-        ...finishimgtodelete.map(public_id => deleteOnCloudinary(public_id))
+        ...topsimgtodelete.map(url => deleteImage(url)),
+        ...edgeimgtodelete.map(url => deleteImage(url)),
+        ...finishimgtodelete.map(url => deleteImage(url))
     ]);
 
     return res

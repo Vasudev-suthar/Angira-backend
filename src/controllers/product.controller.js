@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { Product } from "../models/product.model.js"
-import { uploadOnCloudinary, deleteOnCloudinary } from "../utils/cloudinary.js"
+import { deleteImage } from "../utils/deleteImg.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { isValidObjectId } from "mongoose"
 
@@ -20,18 +20,11 @@ const addProduct = asyncHandler(async (req, res) => {
         throw new ApiError(400, "image file is required")
     }
 
-    const productImg = await uploadOnCloudinary(productImgLocalPath)
-
-    if (!productImg) {
-        throw new ApiError(400, "product image file is required")
-    }
-
     const product = await Product.create({
         CategoryName,
         ProductName,
         img: {
-            url: productImg.url,
-            public_id: productImg.public_id
+            url: productImgLocalPath
         }
     })
 
@@ -81,19 +74,12 @@ const updateProductDetails = asyncHandler(async (req, res) => {
     }
 
     // deleting old img and updating with new one
-    const imgToDelete = product.img.public_id
-    const productImgLocalPath = req.file?.path;
+    const imgToDelete = product.img.url
+    const productImgLocalPath = req.files?.img[0]?.path;
 
     if (!productImgLocalPath) {
-        throw new ApiError(400, "product image is required");
+        throw new ApiError(400, "image file is required")
     }
-
-    const productImg = await uploadOnCloudinary(productImgLocalPath);
-
-    if (!productImg) {
-        throw new ApiError(400, "product image not found");
-    }
-
 
     const updateProduct = await Product.findByIdAndUpdate(
         productId,
@@ -102,8 +88,7 @@ const updateProductDetails = asyncHandler(async (req, res) => {
                 CategoryName,
                 ProductName,
                 img: {
-                    public_id: productImg.public_id,
-                    url: productImg.url
+                    url: productImgLocalPath
                 }
             }
         },
@@ -115,7 +100,7 @@ const updateProductDetails = asyncHandler(async (req, res) => {
     }
 
     if (updateProduct) {
-        await deleteOnCloudinary(imgToDelete);
+        await deleteImage(imgToDelete);
     }
 
     return res
@@ -143,7 +128,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Failed to delete product please try again");
     }
 
-    await deleteOnCloudinary(product.img.public_id);
+    await deleteImage(product.img.url);
 
     return res
         .status(200)

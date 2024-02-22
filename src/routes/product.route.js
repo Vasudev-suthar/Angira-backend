@@ -15,7 +15,17 @@ router.route("/addproduct").post(
 )
 
 router.route("/getproduct").get(getProduct)
-router.route("/updateproduct/:productId").put(upload.single("img"), updateProductDetails)
+
+router.route("/updateproduct/:productId").put(
+    upload.fields([
+        {
+            name: "img",
+            maxCount: 1
+        }
+    ]),
+    updateProductDetails
+)
+
 router.route("/deleteproduct/:productId").delete(deleteProduct)
 router.route("/searchproduct/:key").get(searchProduct)
 router.route("/productoption/:productId").get(aggregateProductsWithOptions)
