@@ -15,7 +15,7 @@ const addProductOption = asyncHandler(async (req, res) => {
     }
 
     const productsetAlready = await Productoption.findOne({
-        Product: productid,
+        ProductID: productid,
     });
 
     if (productsetAlready) {
@@ -114,7 +114,7 @@ const addProductOption = asyncHandler(async (req, res) => {
 
     // Create product option with the processed data
     const productOption = await Productoption.create({
-        Product: productid,
+        ProductID: productid,
         Tops: topsImages,
         Edges: edgesImages,
         Finish: finishesImages
@@ -239,9 +239,11 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
     const updatedProductOption = await Productoption.findByIdAndUpdate(
         productOptionId,
         {
-            Tops: topsImages,
-            Edges: edgesImages,
-            Finish: finishesImages
+            $set: {
+                Tops: topsImages,
+                Edges: edgesImages,
+                Finish: finishesImages
+            }
         },
         { new: true }
     );
@@ -250,7 +252,7 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Failed to update product option, please try again");
     }
 
-    // Delete old images from Cloudinary
+    // Delete old images
     await Promise.all([
         ...topsimgtodelete.map(url => deleteImage(url)),
         ...edgeimgtodelete.map(url => deleteImage(url)),
