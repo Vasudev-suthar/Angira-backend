@@ -5,12 +5,19 @@ import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import dotenv from "dotenv"
 import { Admin } from '../models/admin.model.js';
+import { validationResult } from 'express-validator'
 
 dotenv.config({
     path: './env'
 })
 
 const register = asyncHandler(async (req, res) => {
+
+    const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
+
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
@@ -31,17 +38,17 @@ const register = asyncHandler(async (req, res) => {
         password: hashedPassword
     });
 
-    const createUser = await Admin.findById(admin._id).select(
+    const createAdmin = await Admin.findById(admin._id).select(
         "-password "
     )
 
-    if (!createUser) {
+    if (!createAdmin) {
         throw new ApiError(500, "Something went wrong while registering the user")
     }
 
 
     return res.status(201).json(
-        new ApiResponse(200, createUser, "User registered successfully")
+        new ApiResponse(200, createAdmin, "Admin registered successfully")
     )
 
 })
@@ -69,11 +76,11 @@ const login = asyncHandler(async (req, res) => {
 
     const loggedInUser = await Admin.findById(user._id).select("-password")
     return res
-    .status(201)
-    .cookie("Token", token)
-    .json(
-        new ApiResponse(200, loggedInUser, "Admin logged in Successfully")
-    )
+        .status(201)
+        .cookie("Token", token)
+        .json(
+            new ApiResponse(200, loggedInUser, "Admin logged in Successfully")
+        )
 
 });
 
