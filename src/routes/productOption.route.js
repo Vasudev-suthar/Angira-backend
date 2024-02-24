@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { addProductOption, getProductOption, updateProductOptionDetails, deleteProductOption } from "../controllers/productOption.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"
+import { authenticateToken } from "../middlewares/auth.middleware.js"
 
 const router = Router()
 
@@ -29,11 +30,11 @@ const fieldsConfig = [
 
 ];
 
-router.route("/addproductoption/:productid").post(upload.fields(fieldsConfig), addProductOption)
+router.route("/addproductoption/:productid").post(upload.fields(fieldsConfig), authenticateToken, addProductOption)
 
-router.route("/getproductoption").get(getProductOption)
-router.route("/updateproductoption/:productOptionId").put(upload.fields(fieldsConfig), updateProductOptionDetails)
-router.route("/deleteproductoption/:productOptionId").delete(deleteProductOption)
+router.route("/getproductoption").get(authenticateToken, getProductOption)
+router.route("/updateproductoption/:productOptionId").put(upload.fields(fieldsConfig), authenticateToken, updateProductOptionDetails)
+router.route("/deleteproductoption/:productOptionId").delete(authenticateToken, deleteProductOption)
 
 
 export default router
