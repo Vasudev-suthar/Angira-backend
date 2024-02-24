@@ -4,7 +4,7 @@ const deleteImage = async (localFilePath) => {
     try {
         fs.unlinkSync(localFilePath)
         return response
-    } catch (error) { 
+    } catch (error) {
         return error
     }
 }

@@ -4,7 +4,7 @@ import { registrationValidationRules } from "../middlewares/admin.validation.js"
 
 const router = Router()
 
-router.route("/register").post(registrationValidationRules,register)
+router.route("/register").post(registrationValidationRules, register)
 router.route("/login").post(login)
 
 export default router

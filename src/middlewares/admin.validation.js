@@ -9,6 +9,6 @@ const registrationValidationRules = [
         .withMessage('Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character'),
 ]
 
-export{
+export {
     registrationValidationRules
 }
