@@ -32,7 +32,7 @@ const fieldsConfig = [
 
 router.route("/addproductoption/:productid").post(upload.fields(fieldsConfig), authenticateToken, addProductOption)
 
-router.route("/getproductoption").get(authenticateToken, getProductOption)
+router.route("/getproductoption").get(getProductOption)
 router.route("/updateproductoption/:productOptionId").put(upload.fields(fieldsConfig), authenticateToken, updateProductOptionDetails)
 router.route("/deleteproductoption/:productOptionId").delete(authenticateToken, deleteProductOption)
 
