@@ -8,24 +8,8 @@
     ],
     "routes": [
         {
-            "src": "/api/v1/(.*)",
-            "dest": "src/index.js"
-        },
-        {
-            "src": "/api/v2/(.*)",
-            "dest": "src/index.js"
-        },
-        {
-            "src": "/api/v/(.*)",
-            "dest": "src/index.js"
-        },
-        {
             "src": "/(.*)",
             "dest": "src/index.js"
-        },
-        {
-            "src": "/api/(product.route.js|productOption.route.js|admin.route.js)",
-            "dest": "src/routes/:1"
         }
     ]
 }
