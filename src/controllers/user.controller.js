@@ -12,7 +12,7 @@ dotenv.config({
     path: './env'
 })
 
-const register = asyncHandler(async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -47,14 +47,15 @@ const register = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Something went wrong while registering the user")
     }
 
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     return res.status(201).json(
-        new ApiResponse(200, createnewUser, "User registered successfully")
+        new ApiResponse(200,{ createnewUser,"token": token}, "User registered successfully")
     )
 
 })
 
-const login = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
     const { email, username, password } = req.body;
 
     if (!username && !email) {
@@ -73,14 +74,13 @@ const login = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid email or password");
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     const loggedInUser = await User.findById(user._id).select("-password")
     return res
         .status(201)
-        .cookie("Token", token)
         .json(
-            new ApiResponse(200, loggedInUser, "User logged in Successfully")
+            new ApiResponse(200, {loggedInUser,"token": token}, "User logged in Successfully")
         )
 
 });
@@ -218,8 +218,8 @@ const updateUserDetails = asyncHandler(async (req, res) => {
 
 
 export {
-    register,
-    login,
+    registerUser,
+    loginUser,
     changePassword,
     getUser,
     deleteUser,
