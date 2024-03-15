@@ -21,8 +21,15 @@ const updateUserValidationRules = [
     body('email').isEmail().withMessage('Valid email is required')
 ]
 
+const contactusValidationRules = [
+    body('Address').notEmpty().withMessage('Address is required'),
+    body('BranchAddress').notEmpty().withMessage('BranchAddress is required'),
+    body('EmailAddress').notEmpty().withMessage('Email address is required').isEmail().withMessage('Valid email is required')
+]
+
 export {
     registrationValidationRules,
     changePasswordValidationRules,
-    updateUserValidationRules
+    updateUserValidationRules,
+    contactusValidationRules
 }

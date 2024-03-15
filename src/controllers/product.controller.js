@@ -14,13 +14,18 @@ const addProduct = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required");
     }
 
+    const product = await Product.findOne({ ProductName });
+    if (product) {
+        throw new ApiError(400, "Product already exists");
+    }
+
     const productImgLocalPath = req.files?.img[0]?.path;
 
     if (!productImgLocalPath) {
         throw new ApiError(400, "image file is required")
     }
 
-    const product = await Product.create({
+    const newproduct = await Product.create({
         CategoryName,
         ProductName,
         img: {
@@ -28,8 +33,12 @@ const addProduct = asyncHandler(async (req, res) => {
         }
     })
 
+    if (!newproduct) {
+        throw new ApiError(500, "Something went wrong while adding product")
+    }
+
     return res.status(201).json(
-        new ApiResponse(200, product, "Product added Successfully")
+        new ApiResponse(200, newproduct, "Product added Successfully")
     )
 
 })

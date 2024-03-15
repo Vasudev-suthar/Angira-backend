@@ -7,7 +7,7 @@ const router = Router()
 
 router.route("/register").post(registrationValidationRules, registerUser)
 router.route("/login").post(loginUser)
-router.route("/getuser").get(getUser)
+router.route("/getuser").get(authenticateToken,getUser)
 router.route("/deleteuser/:userId").delete(authenticateToken,deleteUser)
 router.route("/changepassword/:id").patch(changePasswordValidationRules,authenticateToken,changePassword)
 router.route("/updateuser/:userId").patch(updateUserValidationRules,authenticateToken,updateUserDetails)

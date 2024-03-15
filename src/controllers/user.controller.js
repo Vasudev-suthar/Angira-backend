@@ -49,8 +49,10 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-    return res.status(201).json(
-        new ApiResponse(200,{ createnewUser,"token": token}, "User registered successfully")
+    return res.status(201)
+    .cookie("token", token)
+    .json(
+        new ApiResponse(200,createnewUser, "User registered successfully")
     )
 
 })
@@ -79,8 +81,9 @@ const loginUser = asyncHandler(async (req, res) => {
     const loggedInUser = await User.findById(user._id).select("-password")
     return res
         .status(201)
+        .cookie("token", token)
         .json(
-            new ApiResponse(200, {loggedInUser,"token": token}, "User logged in Successfully")
+            new ApiResponse(200, loggedInUser, "User logged in Successfully")
         )
 
 });

@@ -120,7 +120,7 @@ const addProductOption = asyncHandler(async (req, res) => {
         Finish: finishesImages
     });
 
-    return res.status(201).json(new ApiResponse(200, productOption, "Product added Successfully"));
+    return res.status(201).json(new ApiResponse(200, productOption, "Product options added Successfully"));
 });
 
 const getProductOption = asyncHandler(async (req, res) => {
@@ -267,14 +267,14 @@ const deleteProductOption = asyncHandler(async (req, res) => {
     const { productOptionId } = req.params
 
     if (!isValidObjectId(productOptionId)) {
-        throw new ApiError(400, "Invalid productId");
+        throw new ApiError(400, "Invalid productOptionId");
     }
 
     const productOption = await Productoption.findById(productOptionId);
 
 
     if (!productOption) {
-        throw new ApiError(404, "No product found");
+        throw new ApiError(404, "No productOption found");
     }
 
 
@@ -282,10 +282,10 @@ const deleteProductOption = asyncHandler(async (req, res) => {
     const edgeimgtodelete = productOption.Edges.map(edge => edge.edgesimg.url);
     const finishimgtodelete = productOption.Finish.map(finish => finish.finishimg.url);
 
-    const deleteProduct = await Productoption.findByIdAndDelete(productOptionId);
+    const deleteProductOption = await Productoption.findByIdAndDelete(productOptionId);
 
-    if (!deleteProduct) {
-        throw new ApiError(500, "Failed to delete product please try again");
+    if (!deleteProductOption) {
+        throw new ApiError(500, "Failed to delete Product Option please try again");
     }
 
     await Promise.all([
