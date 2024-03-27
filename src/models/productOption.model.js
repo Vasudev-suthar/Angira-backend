@@ -24,7 +24,7 @@ const productOptionSchema = new Schema(
         ],
         Edges: [
             {
-                edgename: {
+                edgename: { 
                     type: String,
                     required: true
                 },
