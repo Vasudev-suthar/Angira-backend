@@ -6,12 +6,12 @@ import { authenticateToken } from "../middlewares/auth.middleware.js"
 const router = Router()
 
 router.route("/addproduct").post(
-    upload.fields([
-        {
-            name: "img",
-            maxCount: 1
-        }
-    ]),
+    // upload.fields([
+    //     {
+    //         name: "img",
+    //         maxCount: 1
+    //     }
+    // ]),
     authenticateToken,
     addProduct
 )
@@ -19,12 +19,12 @@ router.route("/addproduct").post(
 router.route("/getproduct").get(getProduct)
 
 router.route("/updateproduct/:productId").put(
-    upload.fields([
-        {
-            name: "img",
-            maxCount: 1
-        }
-    ]),
+    // upload.fields([
+    //     {
+    //         name: "img",
+    //         maxCount: 1
+    //     }
+    // ]),
     authenticateToken,
     updateProductDetails
 )
