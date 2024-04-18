@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProduct, aggregateProductsWithOptions, deleteProduct, getProduct, searchProduct, updateProductDetails } from "../controllers/product.controller.js";
+import { addProduct, aggregateProductsWithOptions, deleteProduct, getProduct, searchProduct, updateProductDetails,aggregateProductWithimage } from "../controllers/product.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"
 import { authenticateToken } from "../middlewares/auth.middleware.js"
 
@@ -32,6 +32,7 @@ router.route("/updateproduct/:productId").put(
 router.route("/deleteproduct/:productId").delete(authenticateToken, deleteProduct)
 router.route("/searchproduct/:key").get(searchProduct)
 router.route("/productoption/:productId").get(aggregateProductsWithOptions)
+router.route("/productimage/:productId").get(aggregateProductWithimage)
 
 
 export default router 

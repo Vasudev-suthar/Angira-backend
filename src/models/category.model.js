@@ -5,14 +5,12 @@ const categorySchema = new Schema(
     {
         CategoryName: {
             type: String,
-            enum: ['Dining Table', 'Stool', 'Coffee Table', 'Metal Leg'],
             required: true
         },
         image: {
             type: {
                 url: String,
-            },
-            required: true
+            }
         }
     },
     {

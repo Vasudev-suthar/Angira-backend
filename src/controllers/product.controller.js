@@ -216,7 +216,7 @@ const aggregateProductsWithOptions = asyncHandler(async (req, res) => {
 
     const productIdValue = product._id;
 
-    // Aggregate based on ProductName
+    // Aggregate based on Productid
     const productsWithOptions = await Product.aggregate([
         {
             $match: {
@@ -264,6 +264,67 @@ const aggregateProductsWithOptions = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, productsWithOptions[0], "Product with options fetched successfully"));
 });
 
+const aggregateProductWithimage = asyncHandler(async (req, res) => {
+    const { productId } = req.params;
+
+    if (!productId) {
+        throw new ApiError(400, "Product ID is missing");
+    }
+
+    // Fetch the product document using the _id
+    const product = await Product.findById(productId);
+
+    if (!product) {
+        throw new ApiError(404, "Product not found");
+    }
+
+    const productIdValue = product._id;
+
+    // Aggregate based on Productid
+    const productWithimage = await Product.aggregate([
+        {
+            $match: {
+                _id: productIdValue
+            }
+        },
+        {
+            $lookup: {
+                from: 'productimages',
+                localField: '_id',
+                foreignField: 'ProductID',
+                as: 'productimage'
+            }
+        },
+        {
+            $project: {
+                category: 1,
+                name: 1,
+                productCode: 1,
+                hsn: 1,
+                topFinish: 1,
+                legFinish: 1,
+                topMaterial: 1,
+                legMaterial: 1,
+                size: 1,
+                cbm: 1,
+                grossWeight: 1,
+                netWeight: 1,
+                price: 1,
+                Public: 1,
+                newBadge: 1,
+                description: 1,
+                remark: 1,
+                image:{ $arrayElemAt: ['$productimage.image.url', 0] }
+            }
+        }
+    ]);
+
+    if (!productWithimage?.length) {
+        throw new ApiError(404, "Product with image does not exist");
+    }
+
+    return res.status(200).json(new ApiResponse(200, productWithimage[0], "Product with image fetched successfully"));
+})
 
 export {
     addProduct,
@@ -271,5 +332,6 @@ export {
     updateProductDetails,
     deleteProduct,
     searchProduct,
-    aggregateProductsWithOptions
+    aggregateProductsWithOptions,
+    aggregateProductWithimage
 }

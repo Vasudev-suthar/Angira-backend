@@ -23,7 +23,7 @@ const addProductImage = asyncHandler(async (req, res) => {
             .json(new ApiResponse(200, "product Image is set Already"));
     }
 
-    const productImgLocalPath = req.files?.image[0]?.path;
+    const productImgLocalPath = req.files?.image?.[0]?.path;
 
     if (!productImgLocalPath) {
         throw new ApiError(400, "image file is required")
@@ -82,7 +82,7 @@ const updateProductImage = asyncHandler(async (req, res) => {
 
     // deleting old img and updating with new one
     const imgToDelete = product.image.url
-    const productImgLocalPath = req.files?.image[0]?.path;
+    const productImgLocalPath = req.files?.image?.[0]?.path;
 
     if (!productImgLocalPath) {
         throw new ApiError(400, "image file is required")

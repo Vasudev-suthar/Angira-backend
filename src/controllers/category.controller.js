@@ -19,11 +19,11 @@ const addCategory = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Category already exists");
     }
 
-    const categoryImgLocalPath = req.files?.image[0]?.path;
+    const categoryImgLocalPath = req.files?.image?.[0]?.path;
 
-    if (!categoryImgLocalPath) {
-        throw new ApiError(400, "image file is required")
-    }
+    // if (!categoryImgLocalPath) {
+    //     throw new ApiError(400, "image file is required")
+    // }
 
     const newcategory = await Category.create({
         CategoryName,
@@ -71,9 +71,9 @@ const updateCategoryDetails = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid categoryId");
     }
 
-    // if (!CategoryName) {
-    //     throw new ApiError(400, "CategoryName is required");
-    // }
+    if (!CategoryName) {
+        throw new ApiError(400, "CategoryName is required");
+    }
 
     const category = await Category.findById(categoryId);
 
@@ -83,7 +83,7 @@ const updateCategoryDetails = asyncHandler(async (req, res) => {
 
     // deleting old img and updating with new one
     const imgToDelete = category.image.url
-    const categoryImgLocalPath = req.files?.image[0]?.path;
+    const categoryImgLocalPath = req.files?.image?.[0]?.path;
 
     // if (!categoryImgLocalPath) {
     //     throw new ApiError(400, "image file is required")
