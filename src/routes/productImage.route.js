@@ -8,8 +8,8 @@ const router = Router()
 router.route("/addproductImage/:productImageId").post(
     upload.fields([
         {
-            name: "image",
-            maxCount: 1
+            name: "images",
+            maxCount: 8
         }
     ]),
     authenticateToken,
@@ -21,8 +21,8 @@ router.route("/getproductImage").get(getProductImage)
 router.route("/updateproductImage/:productImageId").put(
     upload.fields([
         {
-            name: "image",
-            maxCount: 1
+            name: "images",
+            maxCount: 8
         }
     ]),
     authenticateToken,

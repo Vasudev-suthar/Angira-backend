@@ -20,28 +20,30 @@ const addProductImage = asyncHandler(async (req, res) => {
     if (productsetAlready) {
         return res
             .status(200)
-            .json(new ApiResponse(200, "product Image is set Already"));
+            .json(new ApiResponse(200, "product Images is set Already"));
     }
 
-    const productImgLocalPath = req.files?.image?.[0]?.path;
+    const productImgLocalPaths = req.files?.images?.map(file => file.path);
 
-    if (!productImgLocalPath) {
-        throw new ApiError(400, "image file is required")
+    if (!productImgLocalPaths || productImgLocalPaths.length === 0) {
+        throw new ApiError(400, "Images files are required");
     }
 
-    const newproductImage = await ProductImage.create({
+    const productImages = productImgLocalPaths.map(path => ({
+        url: path
+    }));
+
+    const newProductImages = await ProductImage.create({
         ProductID: productImageId,
-        image: {
-            url: productImgLocalPath
-        }
-    })
+        images: productImages
+    });
 
-    if (!newproductImage) {
+    if (!newProductImages) {
         throw new ApiError(500, "Something went wrong while adding product Image")
     }
 
     return res.status(201).json(
-        new ApiResponse(200, newproductImage, "Product Image added Successfully")
+        new ApiResponse(200, newProductImages, "Product Images added Successfully")
     )
 
 })
@@ -80,34 +82,30 @@ const updateProductImage = asyncHandler(async (req, res) => {
         throw new ApiError(404, "No product found");
     }
 
-    // deleting old img and updating with new one
-    const imgToDelete = product.image.url
-    const productImgLocalPath = req.files?.image?.[0]?.path;
+    const productImgLocalPaths = req.files?.images?.map(file => ({
+        url: file.path
+    }));
 
-    if (!productImgLocalPath) {
-        throw new ApiError(400, "image file is required")
+    if (!productImgLocalPaths || productImgLocalPaths.length === 0) {
+        throw new ApiError(400, "Image files are required");
     }
 
+    
+    // Update product images with new ones
     const updateProductimage = await ProductImage.findByIdAndUpdate(
         productImageId,
-        {
-            $set: {
-                image: {
-                    url: productImgLocalPath
-                }
-            }
-        },
+        { $set: { images: productImgLocalPaths } },
         { new: true }
     );
-
+    
     if (!updateProductimage) {
         throw new ApiError(500, "Failed to update product Image please try again");
     }
-
-    if (updateProductimage) {
-        await deleteImage(imgToDelete);
-    }
-
+    
+    // Delete old images
+    const imgsToDelete = product.images.map(img => img.url);
+    await Promise.all(imgsToDelete.map(deleteImage));
+    
     return res
         .status(200)
         .json(new ApiResponse(200, updateProductimage, "Product updated successfully"));
@@ -127,17 +125,20 @@ const deleteProductImage = asyncHandler(async (req, res) => {
         throw new ApiError(404, "No product found");
     }
 
+    const imgsToDelete = product.images.map(img => img.url);
+
+    // Delete images
+    await Promise.all(imgsToDelete.map(deleteImage));
+
     const deleteProductimage = await ProductImage.findByIdAndDelete(productImageId);
 
     if (!deleteProductimage) {
         throw new ApiError(500, "Failed to delete product please try again");
     }
 
-    await deleteImage(product.image.url);
-
     return res
         .status(200)
-        .json(new ApiResponse(200, deleteProductimage, "Product Image deleted successfully"));
+        .json(new ApiResponse(200, deleteProductimage, "Product Images deleted successfully"));
 })
 
 

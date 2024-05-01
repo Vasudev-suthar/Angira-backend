@@ -8,12 +8,14 @@ const productImageSchema = new Schema(
             ref: "Product",
             required: true
         },
-        image: {
-            type: {
-                url: String,
-            },
-            required: true
-        }
+        images: [
+            {
+                type: {
+                    url: String,
+                },
+                required: true
+            }
+        ]
     },
     {
         timestamps: true
