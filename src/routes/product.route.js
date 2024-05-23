@@ -1,30 +1,18 @@
 import { Router } from "express";
-import { addProduct, aggregateProductsWithOptions, deleteProduct, getProduct, searchProduct, updateProductDetails,aggregateProductWithimage } from "../controllers/product.controller.js";
-import { upload } from "../middlewares/multer.middleware.js"
+import { addProduct, aggregateProductsWithOptions, deleteProduct, getProduct, searchProduct, updateProductDetails,aggregateProductWithimage, getProductbyid } from "../controllers/product.controller.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js"
 
 const router = Router()
 
 router.route("/addproduct").post(
-    // upload.fields([
-    //     {
-    //         name: "img",
-    //         maxCount: 1
-    //     }
-    // ]),
     authenticateToken,
     addProduct
 )
 
 router.route("/getproduct").get(getProduct)
+router.route("/getproductbyid/:productId").get(getProductbyid)
 
 router.route("/updateproduct/:productId").put(
-    // upload.fields([
-    //     {
-    //         name: "img",
-    //         maxCount: 1
-    //     }
-    // ]),
     authenticateToken,
     updateProductDetails
 )

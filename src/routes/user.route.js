@@ -9,7 +9,7 @@ router.route("/register").post(registrationValidationRules, registerUser)
 router.route("/login").post(loginUser)
 router.route("/getuser").get(authenticateToken,getUser)
 router.route("/deleteuser/:userId").delete(authenticateToken,deleteUser)
-router.route("/changepassword/:id").patch(changePasswordValidationRules,authenticateToken,changePassword)
-router.route("/updateuser/:userId").patch(updateUserValidationRules,authenticateToken,updateUserDetails)
+router.route("/changepassword/:id").put(changePasswordValidationRules,authenticateToken,changePassword)
+router.route("/updateuser/:userId").put(updateUserValidationRules,authenticateToken,updateUserDetails)
 
 export default router

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProductImage, getProductImage, deleteProductImage, updateProductImage } from "../controllers/productImage.controller.js";
+import { addProductImage, getProductImage, deleteProductImage, updateProductImage, getProductImageById } from "../controllers/productImage.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"
 import { authenticateToken } from "../middlewares/auth.middleware.js"
 
@@ -9,7 +9,7 @@ router.route("/addproductImage/:productImageId").post(
     upload.fields([
         {
             name: "images",
-            maxCount: 8
+            maxCount: 10
         }
     ]),
     authenticateToken,
@@ -17,12 +17,13 @@ router.route("/addproductImage/:productImageId").post(
 )
 
 router.route("/getproductImage").get(getProductImage)
+router.route("/getproductImagebyId/:productImageId").get(getProductImageById)
 
 router.route("/updateproductImage/:productImageId").put(
     upload.fields([
         {
             name: "images",
-            maxCount: 8
+            maxCount: 10
         }
     ]),
     authenticateToken,

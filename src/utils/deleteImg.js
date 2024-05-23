@@ -3,9 +3,9 @@ import fs from "fs"
 const deleteImage = async (localFilePath) => {
     try {
         fs.unlinkSync(localFilePath)
-        return response
+        return { success: true, path: localFilePath };
     } catch (error) {
-        return error
+        return { success: false, error: error.message, path: localFilePath };
     }
 }
 

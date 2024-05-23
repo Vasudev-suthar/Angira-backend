@@ -57,16 +57,33 @@ const getProductImage = asyncHandler(async (req, res) => {
 
     else if (productsImage.length > 0) {
         res.status(201).json(
-            new ApiResponse(200, productsImage, "products fetched successfully")
+            new ApiResponse(200, productsImage, "products images fetched successfully")
         )
     }
 
     else {
         res.status(201).json(
-            new ApiResponse(200, "currantly have not any products")
+            new ApiResponse(200, "currantly have not any products images")
         )
     }
 })
+
+const getProductImageById = asyncHandler(async (req, res) => {
+    const { productImageId } = req.params;
+
+    if (!productImageId) {
+        throw new ApiError(400, "Product Image ID is missing");
+    }
+
+    const productImage = await ProductImage.findById(productImageId);
+
+    if (!productImage) {
+        throw new ApiError(404, "Product Image not found");
+    }
+
+    res.status(200).json(new ApiResponse(200, productImage, "Product Image fetched successfully"));
+});
+
 
 const updateProductImage = asyncHandler(async (req, res) => {
 
@@ -127,15 +144,15 @@ const deleteProductImage = asyncHandler(async (req, res) => {
 
     const imgsToDelete = product.images.map(img => img.url);
 
-    // Delete images
-    await Promise.all(imgsToDelete.map(deleteImage));
-
     const deleteProductimage = await ProductImage.findByIdAndDelete(productImageId);
-
+    
     if (!deleteProductimage) {
         throw new ApiError(500, "Failed to delete product please try again");
     }
-
+    
+    // Delete images
+    await Promise.all(imgsToDelete.map(deleteImage));
+    
     return res
         .status(200)
         .json(new ApiResponse(200, deleteProductimage, "Product Images deleted successfully"));
@@ -145,6 +162,7 @@ const deleteProductImage = asyncHandler(async (req, res) => {
 export {
     addProductImage,
     getProductImage,
+    getProductImageById,
     updateProductImage,
     deleteProductImage
 }

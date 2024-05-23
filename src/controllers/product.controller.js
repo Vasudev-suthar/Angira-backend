@@ -1,7 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { Product } from "../models/product.model.js"
-import { deleteImage } from "../utils/deleteImg.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { isValidObjectId } from "mongoose"
 
@@ -18,12 +17,6 @@ const addProduct = asyncHandler(async (req, res) => {
     if (product) {
         throw new ApiError(400, "Product already exists");
     }
-
-    // const productImgLocalPath = req.files?.img[0]?.path;
-
-    // if (!productImgLocalPath) {
-    //     throw new ApiError(400, "image file is required")
-    // }
 
     const newproduct = await Product.create({
         category,
@@ -43,9 +36,6 @@ const addProduct = asyncHandler(async (req, res) => {
         newBadge,
         description,
         remark
-        // img: {
-        //     url: productImgLocalPath
-        // }
     })
 
     if (!newproduct) {
@@ -78,6 +68,23 @@ const getProduct = asyncHandler(async (req, res) => {
     }
 })
 
+const getProductbyid = asyncHandler(async (req, res) => {
+
+    const { productId } = req.params
+
+    if (!productId) {
+        throw new ApiError(400, "Product ID is missing");
+    }
+
+    const product = await Product.findById(productId)
+
+    if (!product) {
+        throw new ApiError(400, "product are not found")
+    }
+
+    res.status(200).json(new ApiResponse(200, product, "Product fetched successfully"));
+})
+
 const updateProductDetails = asyncHandler(async (req, res) => {
 
     const { productId } = req.params
@@ -87,23 +94,11 @@ const updateProductDetails = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid productId");
     }
 
-    // if (!(category && name && productCode && hsn && topFinish && legFinish && topMaterial && legMaterial && size && cbm && grossWeight && netWeight && price && Public && newBadge && description && remark)) {
-    //     throw new ApiError(400, "All fields are required");
-    // }
-
     const product = await Product.findById(productId);
 
     if (!product) {
         throw new ApiError(404, "No product found");
     }
-
-    // deleting old img and updating with new one
-    // const imgToDelete = product.img.url
-    // const productImgLocalPath = req.files?.img[0]?.path;
-
-    // if (!productImgLocalPath) {
-    //     throw new ApiError(400, "image file is required")
-    // }
 
     const updateProduct = await Product.findByIdAndUpdate(
         productId,
@@ -126,9 +121,6 @@ const updateProductDetails = asyncHandler(async (req, res) => {
                 newBadge,
                 description,
                 remark
-                // img: {
-                //     url: productImgLocalPath
-                // }
             }
         },
         { new: true }
@@ -137,10 +129,6 @@ const updateProductDetails = asyncHandler(async (req, res) => {
     if (!updateProduct) {
         throw new ApiError(500, "Failed to update product please try again");
     }
-
-    // if (updateProduct) {
-    //     await deleteImage(imgToDelete);
-    // }
 
     return res
         .status(200)
@@ -178,23 +166,25 @@ const searchProduct = asyncHandler(async (req, res) => {
 
     const products = await Product.find({
         "$or": [
-            { category: { $regex: (req.params.key, 'i') } },
-            { name: { $regex: (req.params.key, 'i') } }
+            { category: { $regex: (req.params.key), $options: 'i' } },
+            { name: { $regex: (req.params.key), $options: 'i' } }
         ]
     })
 
     if (!products) {
-        throw new ApiError(400, "products are not found")
+        res.status(200).json(
+            new ApiResponse(200, "products are not found")
+        )
     }
 
     else if (products.length > 0) {
-        res.status(201).json(
+        res.status(200).json(
             new ApiResponse(200, products, "products fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+        res.status(200).json(
             new ApiResponse(200, "currantly have not any products")
         )
     }
@@ -314,7 +304,7 @@ const aggregateProductWithimage = asyncHandler(async (req, res) => {
                 newBadge: 1,
                 description: 1,
                 remark: 1,
-                image:{ $arrayElemAt: ['$productimage.image.url', 0] }
+                images: { $arrayElemAt: ['$productimage.images.url', 0] }
             }
         }
     ]);
@@ -333,5 +323,6 @@ export {
     deleteProduct,
     searchProduct,
     aggregateProductsWithOptions,
-    aggregateProductWithimage
+    aggregateProductWithimage,
+    getProductbyid
 }
