@@ -46,18 +46,19 @@ const addProductOption = asyncHandler(async (req, res) => {
 
     
     const topsOptions = mapOptions('Tops', req);
-    const edgesOptions = mapOptions('Edges', req);
-    const finishOptions = mapOptions('Finish', req);
+    // const edgesOptions = mapOptions('Edges', req);
+    // const finishOptions = mapOptions('Finish', req);
 
-    if (!topsOptions.length || !edgesOptions.length || !finishOptions.length) {
+    // if (!topsOptions.length || !edgesOptions.length || !finishOptions.length) {
+    if (!topsOptions.length) {
         throw new ApiError(400, "At least one top, edge, and finish are required");
     }
 
     const productOption = await Productoption.create({
         ProductID: productid,
         Tops: topsOptions,
-        Edges: edgesOptions,
-        Finish: finishOptions
+        // Edges: edgesOptions,
+        // Finish: finishOptions
     });
 
     return res.status(201).json(new ApiResponse(200, productOption, "Product options added successfully"));
@@ -146,8 +147,8 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
     };
 
     const updatedTops = mapUpdatedOptions('Tops', req, productOption.Tops);
-    const updatedEdges = mapUpdatedOptions('Edges', req, productOption.Edges);
-    const updatedFinish = mapUpdatedOptions('Finish', req, productOption.Finish);
+    // const updatedEdges = mapUpdatedOptions('Edges', req, productOption.Edges);
+    // const updatedFinish = mapUpdatedOptions('Finish', req, productOption.Finish);
 
     // Update product option with new details
     const updatedProductOption = await Productoption.findByIdAndUpdate(
@@ -155,8 +156,8 @@ const updateProductOptionDetails = asyncHandler(async (req, res) => {
         {
             $set: {
                 Tops: updatedTops,
-                Edges: updatedEdges,
-                Finish: updatedFinish
+                // Edges: updatedEdges,
+                // Finish: updatedFinish
             }
         },
         { new: true }
@@ -201,15 +202,15 @@ const deleteProductOption = asyncHandler(async (req, res) => {
         ...top.images.map(img => img.url)
     ]);
 
-    const edgesImagesToDelete = productOption.Edges.flatMap(edge => [
-        edge.displayImage.url,
-        ...edge.images.map(img => img.url)
-    ]);
+    // const edgesImagesToDelete = productOption.Edges.flatMap(edge => [
+    //     edge.displayImage.url,
+    //     ...edge.images.map(img => img.url)
+    // ]);
 
-    const finishesImagesToDelete = productOption.Finish.flatMap(finish => [
-        finish.displayImage.url,
-        ...finish.images.map(img => img.url)
-    ]);
+    // const finishesImagesToDelete = productOption.Finish.flatMap(finish => [
+    //     finish.displayImage.url,
+    //     ...finish.images.map(img => img.url)
+    // ]);
 
     const deletedProductOption = await Productoption.findByIdAndDelete(productOptionId);
 
@@ -219,8 +220,8 @@ const deleteProductOption = asyncHandler(async (req, res) => {
 
     await Promise.all([
         deleteOldImages(topsImagesToDelete),
-        deleteOldImages(edgesImagesToDelete),
-        deleteOldImages(finishesImagesToDelete)
+        // deleteOldImages(edgesImagesToDelete),
+        // deleteOldImages(finishesImagesToDelete)
     ]);
 
     return res.status(200).json(new ApiResponse(200, deletedProductOption, "Product option deleted successfully"));

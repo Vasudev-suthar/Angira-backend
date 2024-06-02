@@ -241,8 +241,8 @@ const aggregateProductsWithOptions = asyncHandler(async (req, res) => {
                 description: 1,
                 remark: 1,
                 Tops: '$options.Tops',
-                Edges: '$options.Edges',
-                Finish: '$options.Finish'
+                // Edges: '$options.Edges',
+                // Finish: '$options.Finish'
             }
         }
     ]);

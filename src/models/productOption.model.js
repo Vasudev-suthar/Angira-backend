@@ -28,46 +28,46 @@ const productOptionSchema = new Schema({
             }]
         }
     ],
-    Edges: [
-        {
-            name: {
-                type: String,
-                required: true
-            },
-            displayImage: {
-                url: {
-                    type: String,
-                    required: true
-                }
-            },
-            images: [{
-                url: {
-                    type: String,
-                    required: true
-                }
-            }]
-        }
-    ],
-    Finish: [
-        {
-            name: {
-                type: String,
-                required: true
-            },
-            displayImage: {
-                url: {
-                    type: String,
-                    required: true
-                }
-            },
-            images: [{
-                url: {
-                    type: String,
-                    required: true
-                }
-            }]
-        }
-    ]
+    // Edges: [
+    //     {
+    //         name: {
+    //             type: String,
+    //             required: true
+    //         },
+    //         displayImage: {
+    //             url: {
+    //                 type: String,
+    //                 required: true
+    //             }
+    //         },
+    //         images: [{
+    //             url: {
+    //                 type: String,
+    //                 required: true
+    //             }
+    //         }]
+    //     }
+    // ],
+    // Finish: [
+    //     {
+    //         name: {
+    //             type: String,
+    //             required: true
+    //         },
+    //         displayImage: {
+    //             url: {
+    //                 type: String,
+    //                 required: true
+    //             }
+    //         },
+    //         images: [{
+    //             url: {
+    //                 type: String,
+    //                 required: true
+    //             }
+    //         }]
+    //     }
+    // ]
 }, {
     timestamps: true
 });
