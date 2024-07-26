@@ -194,7 +194,7 @@ const updateUserDetails = asyncHandler(async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-        throw new ApiError(404, "No product found");
+        throw new ApiError(404, "No User found");
     }
 
     const updateUser = await User.findByIdAndUpdate(
