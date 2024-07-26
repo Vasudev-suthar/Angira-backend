@@ -39,13 +39,13 @@ const getContactus = asyncHandler(async (req, res) => {
     }
 
     else if (contactus.length > 0) {
-        res.status(200).json(
+       return res.status(200).json(
             new ApiResponse(200, contactus, "contactus fetched successfully")
         )
     }
 
     else {
-        res.status(200).json(
+       return res.status(200).json(
             new ApiResponse(200, "currantly have not any contactus")
         )
     }

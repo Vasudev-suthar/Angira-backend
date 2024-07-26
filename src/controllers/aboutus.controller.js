@@ -38,13 +38,13 @@ const getAboutus = asyncHandler(async (req, res) => {
     }
 
     else if (aboutus.length > 0) {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, aboutus, "aboutus fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, "currantly have not any aboutus")
         )
     }

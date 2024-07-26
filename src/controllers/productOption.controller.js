@@ -68,17 +68,19 @@ const getProductOption = asyncHandler(async (req, res) => {
     const productOption = await Productoption.find()
 
     if (!productOption) {
-        throw new ApiError(400, "product Options are not found")
-    }
+        return res.status(200).json(
+             new ApiResponse(200, "product Options are not found")
+         )
+     }
 
     else if (productOption.length > 0) {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, productOption, "product Options fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, "currantly have not any product Options")
         )
     }
@@ -98,7 +100,7 @@ const getProductOptionById = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Product Option not found");
     }
 
-    res.status(200).json(new ApiResponse(200, productOption, "Product Option fetched successfully"));
+    return res.status(200).json(new ApiResponse(200, productOption, "Product Option fetched successfully"));
 });
 
 const updateProductOptionDetails = asyncHandler(async (req, res) => {

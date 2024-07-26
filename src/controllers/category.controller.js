@@ -50,13 +50,13 @@ const getCategory = asyncHandler(async (req, res) => {
     }
 
     else if (categorys.length > 0) {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, categorys, "products fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, "currantly have not any categorys")
         )
     }
@@ -155,13 +155,13 @@ const searchCategory = asyncHandler(async (req, res) => {
     }
 
     else if (categorys.length > 0) {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, categorys, "categorys fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, "currantly have not any categorys")
         )
     }

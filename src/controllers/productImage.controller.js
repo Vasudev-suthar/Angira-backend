@@ -52,17 +52,19 @@ const getProductImage = asyncHandler(async (req, res) => {
     const productsImage = await ProductImage.find()
 
     if (!productsImage) {
-        throw new ApiError(400, "products are not found")
-    }
+        return res.status(200).json(
+             new ApiResponse(200, "products images are not found")
+         )
+     }
 
     else if (productsImage.length > 0) {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, productsImage, "products images fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, "currantly have not any products images")
         )
     }
@@ -81,7 +83,7 @@ const getProductImageById = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Product Image not found");
     }
 
-    res.status(200).json(new ApiResponse(200, productImage, "Product Image fetched successfully"));
+    return res.status(200).json(new ApiResponse(200, productImage, "Product Image fetched successfully"));
 });
 
 

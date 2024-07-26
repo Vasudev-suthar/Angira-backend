@@ -52,17 +52,19 @@ const getProduct = asyncHandler(async (req, res) => {
     const products = await Product.find()
 
     if (!products) {
-        throw new ApiError(400, "products are not found")
-    }
+        return res.status(200).json(
+             new ApiResponse(200, "products are not found")
+         )
+     }
 
     else if (products.length > 0) {
-        res.status(201).json(
+       return res.status(200).json(
             new ApiResponse(200, products, "products fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+       return res.status(200).json(
             new ApiResponse(200, "currantly have not any products")
         )
     }
@@ -82,7 +84,7 @@ const getProductbyid = asyncHandler(async (req, res) => {
         throw new ApiError(400, "product are not found")
     }
 
-    res.status(200).json(new ApiResponse(200, product, "Product fetched successfully"));
+    return res.status(200).json(new ApiResponse(200, product, "Product fetched successfully"));
 })
 
 const updateProductDetails = asyncHandler(async (req, res) => {
@@ -172,19 +174,19 @@ const searchProduct = asyncHandler(async (req, res) => {
     })
 
     if (!products) {
-        res.status(200).json(
+       return res.status(200).json(
             new ApiResponse(200, "products are not found")
         )
     }
 
     else if (products.length > 0) {
-        res.status(200).json(
+       return res.status(200).json(
             new ApiResponse(200, products, "products fetched successfully")
         )
     }
 
     else {
-        res.status(200).json(
+       return res.status(200).json(
             new ApiResponse(200, "currantly have not any products")
         )
     }

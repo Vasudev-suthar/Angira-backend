@@ -40,13 +40,13 @@ const getFinish = asyncHandler(async (req, res) => {
     }
 
     else if (finishes.length > 0) {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, finishes, "finishes fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, "currantly have not any finishes")
         )
     }
@@ -128,13 +128,13 @@ const searchFinish = asyncHandler(async (req, res) => {
     }
 
     else if (finishes.length > 0) {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, finishes, "finishes fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, "currantly have not any finishes")
         )
     }

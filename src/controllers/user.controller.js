@@ -130,17 +130,19 @@ const getUser = asyncHandler(async (req, res) => {
     )
 
     if (!user) {
-        throw new ApiError(400, "User are not found")
-    }
+        return res.status(200).json(
+             new ApiResponse(200, "User are not found")
+         )
+     }
 
     else if (user.length > 0) {
-        res.status(201).json(
+        return res.status(201).json(
             new ApiResponse(200, user, "User fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+        return res.status(201).json(
             new ApiResponse(200, "currantly have not any User")
         )
     }
@@ -154,9 +156,9 @@ const deleteUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid userId");
     }
 
-    const product = await User.findById(userId);
+    const user = await User.findById(userId);
 
-    if (!product) {
+    if (!user) {
         throw new ApiError(404, "No User found");
     }
 
@@ -194,7 +196,7 @@ const updateUserDetails = asyncHandler(async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-        throw new ApiError(404, "No product found");
+        throw new ApiError(404, "No User found");
     }
 
     const updateUser = await User.findByIdAndUpdate(

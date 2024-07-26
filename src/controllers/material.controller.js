@@ -40,13 +40,13 @@ const getMaterial = asyncHandler(async (req, res) => {
     }
 
     else if (materials.length > 0) {
-        res.status(201).json(
+       return  res.status(201).json(
             new ApiResponse(200, materials, "materials fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+      return  res.status(201).json(
             new ApiResponse(200, "currantly have not any materials")
         )
     }
@@ -68,7 +68,7 @@ const updateMaterial = asyncHandler(async (req, res) => {
     const material = await Material.findById(materialId);
 
     if (!material) {
-        throw new ApiError(404, "No category found");
+        throw new ApiError(404, "No material found");
     }
 
     const updatematerial = await Material.findByIdAndUpdate(
@@ -128,13 +128,13 @@ const searchMaterial = asyncHandler(async (req, res) => {
     }
 
     else if (materials.length > 0) {
-        res.status(201).json(
+       return  res.status(201).json(
             new ApiResponse(200, materials, "materials fetched successfully")
         )
     }
 
     else {
-        res.status(201).json(
+       return res.status(201).json(
             new ApiResponse(200, "currantly have not any materials")
         )
     }
