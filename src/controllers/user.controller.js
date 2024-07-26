@@ -154,9 +154,9 @@ const deleteUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid userId");
     }
 
-    const product = await User.findById(userId);
+    const user = await User.findById(userId);
 
-    if (!product) {
+    if (!user) {
         throw new ApiError(404, "No User found");
     }
 
