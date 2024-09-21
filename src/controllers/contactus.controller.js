@@ -59,10 +59,6 @@ const updateContactus = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid contactusId");
     }
 
-    if (!Address && !BranchAddress && !EmailAddress) {
-        throw new ApiError(400, "All field are required");
-    }
-
     const contact = await Contactus.findById(contactusId);
 
     if (!contact) {
